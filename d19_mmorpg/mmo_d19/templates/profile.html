@@ -1,0 +1,37 @@
+{% extends 'flatpages/default.html' %}
+
+{% block title %}
+<h3>Личный кабинет пользователя:</h3>
+<h1>{{ user.username }}</h1>
+
+<hr>
+<a class="btn btn-primary", href="{% url 'post_create' %}">Добавить объявление</a>
+{% endblock title %}
+
+{% block content %}
+<h4>Выберите объявление:</h4>
+<br>
+<form action="" method="get">
+    {{ filterset.form }}
+    <br>
+    <input type="submit" value="Найти">
+</form>
+<br>
+<a class="btn btn-dark", href="{% url 'profile' %}">Сбросить фильтр</a>
+<br>
+<h3>Отклики:</h3>
+{% if replays %}
+{% for replay in replays %}
+    <div style="border: 2px solid #ccc; border-radius: 10px; padding: 15px; margin-bottom: 20px; background-color: #f8f9fa;">
+        <p>{{ replay.replay_author|safe }} {{ replay.date|date:"d E Y, H:i" }} </p>
+        <hr>
+        {{ replay.text|safe }}
+        <hr>
+        <a class="btn btn-success", href="">Принять отклик</a>
+        <a class="btn btn-danger", href="">Удалить отклик</a>
+
+    </div>
+{% endfor %}
+{% endif %}
+
+{% endblock content %}

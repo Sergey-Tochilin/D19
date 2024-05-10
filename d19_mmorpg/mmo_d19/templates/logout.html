@@ -1,0 +1,7 @@
+{% extends 'flatpages/default.html' %}
+
+{% block content %}
+<h1>{{ user.username }}, вы вышли из личного кабинета!</h1>
+<button><a href="{% url 'main page' %}">Ко всем объявлениям</a> </button>
+<button><a href="{% url 'profile' %}">Войти или зарегистрироваться</a> </button>
+{% endblock content %}

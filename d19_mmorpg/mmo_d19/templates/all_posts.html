@@ -1,0 +1,29 @@
+{% extends 'flatpages/default.html' %}
+
+
+{% block title %}
+<hr>
+<h1 class="page-title">Все объявления:</h1>
+<hr>
+
+{% endblock title %}
+
+{% block content %}
+    <hr>
+    <form method="GET">
+        {{ filter.form }}
+        <br>
+        <input type="submit" value="Найти">
+    </form>
+    <hr>
+    {% for post in posts %}
+        <div style="border: 2px solid #ccc; border-radius: 10px; padding: 15px; margin-bottom: 20px; background-color: #f8f9fa;">
+            <p>Автор: {{ post.post_author }}</p>
+            <p>Категория: {{ post.category.name }} </p>
+            <h4><a href="{% url 'post_detail' post.pk %}" style="text-decoration: none; color: black;">{{ post.title }}</a></h4>
+            <span style="font-size: 22px;">{{ post.text|truncatechars:25|safe }}</span>
+            <p>{{ post.date|date:"d E Y, H:i" }}</p>
+
+        </div>
+    {% endfor %}
+ {% endblock content %}
