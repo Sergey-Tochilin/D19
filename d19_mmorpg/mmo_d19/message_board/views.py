@@ -1,7 +1,7 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import ListView, UpdateView, CreateView, DetailView, TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.decorators import login_required
+from django.urls import reverse
 
 
 from .models import *
@@ -147,3 +147,14 @@ class ProfileView(LoginRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
         context['filterset'] = self.filterset
         return context
+
+def accept_replay(request, replay_id):
+    replay = get_object_or_404(Replay, pk=replay_id)# передаю модель и pk по id
+    replay.status = True
+    replay.save()
+    return redirect(reverse('profile'))#возвращаюсь обратно
+
+def delete_replay(request, replay_id):
+    replay = get_object_or_404(Replay, pk=replay_id)
+    replay.delete()
+    return redirect(reverse('profile'))

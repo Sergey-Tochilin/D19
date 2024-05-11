@@ -19,18 +19,30 @@
 <br>
 <a class="btn btn-dark", href="{% url 'profile' %}">Сбросить фильтр</a>
 <br>
-<h3>Отклики:</h3>
-{% if replays %}
-{% for replay in replays %}
-    <div style="border: 2px solid #ccc; border-radius: 10px; padding: 15px; margin-bottom: 20px; background-color: #f8f9fa;">
-        <p>{{ replay.replay_author|safe }} {{ replay.date|date:"d E Y, H:i" }} </p>
-        <hr>
-        {{ replay.text|safe }}
-        <hr>
-        <a class="btn btn-success", href="">Принять отклик</a>
-        <a class="btn btn-danger", href="">Удалить отклик</a>
 
-    </div>
+{% if replays %}
+<h3>Отклики, ожидающие подтверждения:</h3>
+{% for replay in replays %}
+    {% if not replay.status %}
+
+        <div style="border: 2px solid #ccc; border-radius: 10px; padding: 15px; margin-bottom: 20px; background-color: #f8f9fa;">
+            <p>{{ replay.replay_author|safe }} {{ replay.date|date:"d E Y, H:i" }} </p>
+            <hr>
+            {{ replay.text|safe }}
+            <hr>
+            <!-- replay.pk для того, что бы было понятно с каким откликом работать -->
+            <a class="btn btn-success", href="{% url 'accept_replay' replay.pk %}">Принять отклик</a>
+            <a class="btn btn-danger", href="{% url 'delete_replay' replay.pk %}">Удалить отклик</a>
+        </div>
+    {% endif %}
+{% endfor %}
+<h3>Принятые отклики:</h3>
+{% for replay in replays %}
+        <div style="border: 2px solid #ccc; border-radius: 10px; padding: 15px; margin-bottom: 20px; background-color: #f8f9fa;">
+            <p>{{ replay.replay_author|safe }} {{ replay.date|date:"d E Y, H:i" }} </p>
+            <hr>
+            {{ replay.text|safe }}
+        </div>
 {% endfor %}
 {% endif %}
 
