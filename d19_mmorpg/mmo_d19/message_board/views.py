@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views.generic import ListView, UpdateView, CreateView, DetailView, TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
 
 
 from .models import *
@@ -53,11 +54,27 @@ class PostDetail(DetailView):
     template_name = 'post_detail.html'
     context_object_name = 'post'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['replay_form'] = ReplayForm()
+        return context
+
+    # Добавляю метод с формой на страницу
+    def post(self, request, *args, **kwargs):
+        post = self.get_object()
+        form = ReplayForm(request.POST)
+        if form.is_valid():
+            replay = form.save(commit=False)
+            replay.post = post
+            replay.replay_author = request.user
+            replay.save()
+            return redirect('post_detail', pk=post.pk)
 
 
 
 
 
+'''
 class ReplayCreate(LoginRequiredMixin, CreateView):
     model = Replay
     form_class = ReplayForm
@@ -65,11 +82,13 @@ class ReplayCreate(LoginRequiredMixin, CreateView):
 
 
     def form_valid(self, form):
-        replay = form.save(commit=False)
+        replay = form.save(commit=False) #сохраняю объект без сохранения в БД
         replay.replay_author = self.request.user
         replay.post_id = self.kwargs['pk']#Передаю id поста, к которому создавать отклик
         replay.save()
-        return super().form_valid(form)
+        return super().form_valid(form)'''
+
+
 
 
 class PostCreate(LoginRequiredMixin, CreateView):
@@ -115,11 +134,11 @@ class PostSearch(ListView):
 class ProfileView(LoginRequiredMixin, ListView):
     model = Replay
     template_name = 'profile.html'
-    context_object_name = 'replays'
+    context_object_name = 'replays'#Так как переопределил кверисет нужна контекстная переменная в которой он лежит
 
     def get_queryset(self):
         queryset = Replay.objects.filter(post__post_author_id=self.request.user.id)
-        self.filterset =UserPostFilter(self.request.GET, queryset=queryset, request=self.request.user.id)
+        self.filterset = UserPostFilter(self.request.GET, queryset=queryset, request=self.request.user.id)
         if self.request.GET:
             return self.filterset.qs
         return Replay.objects.none()

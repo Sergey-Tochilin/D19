@@ -26,9 +26,9 @@ class UserPostFilter(FilterSet):
     class Meta:
         model = Replay
         fields = [
-            'post',
+            'post'
         ]
 
     def __init__(self, *args, **kwargs):
         super(UserPostFilter, self).__init__(*args, **kwargs)
-        self.filters['post'].queryset = Post.objects.filter(post_author_id=kwargs.get['request'])
+        self.filters['post'].queryset = Post.objects.filter(post_author_id=kwargs.get('request'))

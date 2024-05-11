@@ -17,8 +17,20 @@
 
     </div>
     <hr>
-<!-- post.id для того, что бы передать айди поста для создания отклика -->
- <a class="btn btn-primary", href="{% url 'replay_create' post.id %}">Добавить отклик</a>
-
-
+<!-- 'replay_create' post.id для того, что бы передать айди поста для создания отклика -->
+ <!--<a class="btn btn-primary", href="">Добавить отклик</a>-->
+{% if user.is_authenticated %}
+<h1>Добавить отклик</h1>
+            <hr>
+            <form method="post" style="max-width: 1200px; margin: 0 auto;">
+                {% csrf_token %}
+                    <div style="margin-bottom: 10px;">
+                        {{ replay_form.text }}
+                    </div>
+                    <button type="submit" class="btn btn-primary">Отправить отклик</button>
+            </form>
+{% else %}
+    <p>Авторизуйтесь,ч то бы оставить отклик:</p>
+    <a class="btn btn-primary", href="{% url 'profile' %}">Войти</a>
+{% endif %}
  {% endblock content %}
