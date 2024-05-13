@@ -46,7 +46,12 @@ class PostList(ListView):
         return context
 
 
+class CategoryList(ListView):
+    model = Category
 
+    template_name = 'all_categories.html'
+    context_object_name = 'categories'
+    paginate_by = 10
 
 
 class PostDetail(DetailView):
@@ -135,9 +140,8 @@ class ProfileView(LoginRequiredMixin, ListView):
     model = Replay
     template_name = 'profile.html'
     context_object_name = 'replays'#Так как переопределил кверисет нужна контекстная переменная в которой он лежит
-
     def get_queryset(self):
-        queryset = Replay.objects.filter(post__post_author_id=self.request.user.id)
+        queryset = Replay.objects.filter(post__post_author_id=self.request.user.id).order_by('-date')
         self.filterset = UserPostFilter(self.request.GET, queryset=queryset, request=self.request.user.id)
         if self.request.GET:
             return self.filterset.qs

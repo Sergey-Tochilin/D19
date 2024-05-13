@@ -49,23 +49,23 @@ def notify_about_new_post(sender, instance, **kwargs):
         send_notifications(instance.preview, instance.pk, instance.title, subscribers_list)
 '''
 
-def send_new_replay(pk, post_author, post_id, author_email, replay_author, replay_text):
+def send_new_replay(replay_author, replay_text, replay_post):
 
     html_content = render_to_string(
         template_name='replay_created_email.html',
         context={
-            'post_author': post_author,
+            'post_author': replay_post.post_author,
             'replay_author': replay_author,
             'text': replay_text,
-            'link': f'{settings.SITE_URL}/post/{post_id}'
+            'link': f'{settings.SITE_URL}/posts/post/{replay_post.id}'
         }
     )
 
     msg = EmailMultiAlternatives(
-        subject='У вашего поста новый отклик!',
+        subject='У вашего объявления новый отклик!',
         body='',
         from_email=settings.DEFAULT_FROM_EMAIL,
-        to=[author_email],
+        to=[replay_post.post_author.email],
     )
 
     msg.attach_alternative(html_content, 'text/html')
@@ -74,18 +74,38 @@ def send_new_replay(pk, post_author, post_id, author_email, replay_author, repla
 #сигнал новый отклик
 @receiver(post_save, sender=Replay)
 def about_notify_new_replay(sender, instance, **kwargs):
-    replay = Replay.objects.all()
-    '''через instance(в ней содержится объект модели Replay) я хочу получить сделующие поля
-    автора поста, по идее я через фильтр обращаюсь к к полю post модели Replay в котором внешний ключ на модель Post
-    и там я уже обращаюсь к полю post-author
-    не понимаю как добраться до полей связаных моделей, так не работает'''
-    post_author = Replay.objects.filter('post__post_author')
-    post_id = Replay.objects.filter('post__post_id')
-    author_email = Replay.objects.filter('post__post_author__email')
-    replay_author = replay.replay_author
-    replay_text = replay.text
+    replay_author = instance.replay_author
+    replay_text = instance.text
+    replay_post = instance.post #получаю поле внешний ключ на модель постов
 
-    send_new_replay(instance.pk, post_author, post_id, author_email, replay_author, replay_text)
+    send_new_replay(replay_author, replay_text, replay_post)
 
+
+def send_accept_replay(replay_author, replay_post):
+    html_content = render_to_string(
+        template_name='accept_replay_email.html',
+        context={
+            'replay_author': replay_author,
+            'link': f'{settings.SITE_URL}/posts/post/{replay_post.id}'
+        }
+    )
+
+    msg = EmailMultiAlternatives(
+        subject='Ваш отклик приняли!',
+        body='',
+        from_email=settings.DEFAULT_FROM_EMAIL,
+        to=[replay_author.email],
+    )
+
+    msg.attach_alternative(html_content, 'text/html')
+    msg.send()
+
+#сигнал принятия отклика
+@receiver(post_save, sender=Replay)
+def about_notify_accept_replay(sender, instance, **kwargs):
+    replay_author = instance.replay_author
+    replay_post = instance.post #получаю поле внешний ключ на модель постов
+
+    send_accept_replay(replay_author, replay_post)
 
 
