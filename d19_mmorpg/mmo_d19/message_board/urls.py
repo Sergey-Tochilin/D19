@@ -6,6 +6,7 @@ from allauth.account.views import LogoutView
 urlpatterns = [
     path('', PostList.as_view(), name='posts_list'),
     path('category_list/', CategoryList.as_view(), name='category_list'),
+    path('<int:pk>/category/subscribe/', subscribe, name='subscribe'), #тут скорее всего тоже ошибка
     path('post/<int:pk>/', PostDetail.as_view(), name='post_detail'),
     path('post/create/', PostCreate.as_view(), name='post_create'),
     path('post/create/<int:pk>', PostUpdate.as_view(), name='post_update'),

@@ -32,6 +32,7 @@ class Category(models.Model):
     ]
 
     name = models.CharField(max_length=17, choices=CATEGORY_TYPES)
+    subscribers = models.ManyToManyField(User, blank=True, null=True, related_name='categories')
 
     def __str__(self):
         return self.name.title()
@@ -44,6 +45,9 @@ class Post(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
 
+    def preview(self):
+        prew_text = self.text[0:124] + '...'
+        return prew_text
 
     def __str__(self):
         return self.title.title()

@@ -6,7 +6,7 @@ from django.template.loader import render_to_string
 from .models import Post, Replay
 from django.conf import settings
 
-'''
+
 def send_notifications(preview, pk, title, subscribers_list):
 #из списка подписчиков при каждой итерации цила отправляется сообщение 1 подписчику с обращением
 #к конкретному подписчику в письме
@@ -18,6 +18,7 @@ def send_notifications(preview, pk, title, subscribers_list):
         html_content = render_to_string(
             'post_created_email.html',
             {
+                'title': title,
                 'text': preview,
                 'link': f'{settings.SITE_URL}/posts/post/{pk}',
                 'sub_name': sub_name
@@ -26,7 +27,7 @@ def send_notifications(preview, pk, title, subscribers_list):
         )
 
         msg = EmailMultiAlternatives(
-            subject=title,
+            subject='',
             body='',
             from_email=settings.DEFAULT_FROM_EMAIL,
             to=sub_email,
@@ -35,7 +36,7 @@ def send_notifications(preview, pk, title, subscribers_list):
         msg.send()
 
 
-@receiver(m2m_changed, sender=)
+@receiver(m2m_changed, sender=Post)
 def notify_about_new_post(sender, instance, **kwargs):
     if kwargs['action'] == 'post_add':
         categories = instance.category.all()
@@ -47,7 +48,7 @@ def notify_about_new_post(sender, instance, **kwargs):
             subscribers_list += [s for s in subscribers]
 
         send_notifications(instance.preview, instance.pk, instance.title, subscribers_list)
-'''
+
 
 def send_new_replay(replay_author, replay_text, replay_post):
 
