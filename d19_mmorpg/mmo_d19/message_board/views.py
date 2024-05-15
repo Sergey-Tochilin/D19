@@ -53,10 +53,7 @@ class CategoryList(ListView):
     template_name = 'all_categories.html'
     context_object_name = 'categories'
     paginate_by = 10
-    '''в новостном портале мы делали по-другому и переопределяли контекст и в шаблоне уже проверяли есть ли
-        пользователь в подписчиках или нет, я пытался переопределить контекст, но у меня не получилось, так как
-        Там у нас была страница с одной категорией и постами к ней, а у меня страница со всеми категориями
-        и я не понял, как правильно тут переопределить контекст'''
+
 
 #оформить подписку
 @login_required()
@@ -64,9 +61,15 @@ def subscribe(request, pk):
     user = request.user
     category = Category.objects.get(id=pk)
     category.subscribers.add(user)
+    return redirect('category_list')
 
-    message = 'Вы успешно оформили подписку'
-    return render(request, 'subscribe.html', {'category': category, 'message': message})
+#отменить подписку
+@login_required()
+def unsubscribe(request, pk):
+    user = request.user
+    category = Category.objects.get(id=pk)
+    category.subscribers.remove(user)
+    return redirect('category_list')
 
 
 

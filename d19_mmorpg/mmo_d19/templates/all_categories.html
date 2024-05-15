@@ -9,25 +9,17 @@
 {% endblock title %}
 
 {% block content %}
+{% if categories %}
     {% for category in categories %}
         <div style="border: 2px solid #ccc; border-radius: 10px; padding: 15px; margin-bottom: 20px; background-color: #f8f9fa;">
-            <!--Хочу вывестки каждую категорию в отдельном контейнере-->>
             <p>Название категории: {{ category.name }}</p>
-            <!--Если пользователь авторизован-->>
-            {% if is_authenticated %}
-            <!--Появляется вариант либо оформить подписку либо строка,ч то уже подписан-->>
-                <!-- тут проверяли через контекстную переменную
-                {% if is_not_subscriber %} -->
-                {% if request.user in category.subscribers %}
-                    <p>Вы подписаны на эту категорию</p>
+                {% if request.user not in category.subscribers.all %}
+                    <a class="btn btn-success", href="{% url 'subscribe' category.id %}">Оформить подписку</a>
                 {% else %}
-                    <a class="btn btn-primary", href="{% url 'subscribe' category.id %}">Оформить подписку</a>
+                    <p>Вы подписаны на эту категорию</p>
+                    <a class="btn btn-danger", href="{% url 'unsubscribe' category.id %}">Отменить подписку</a>
                 {% endif %}
-            {% else %}
-            <!--Ну и если не авторизован, то кнопка авторизации-->>
-                <p>Авторизуйтесь, что бы оформить подписку:</p>
-                <a class="btn btn-primary", href="{% url 'profile' %}">Войти</a>
-            {% endif %}
         </div>
     {% endfor %}
- {% endblock content %}
+{% endif %}
+{% endblock content %}

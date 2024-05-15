@@ -46,7 +46,7 @@ class Post(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
 
     def preview(self):
-        prew_text = self.text[0:124] + '...'
+        prew_text = self.text[0:124]
         return prew_text
 
     def __str__(self):

@@ -7,47 +7,47 @@ from .models import Post, Replay
 from django.conf import settings
 
 
-def send_notifications(preview, pk, title, subscribers_list):
+def send_notifications(preview, pk, title, subscribers_list, post_author):
 #из списка подписчиков при каждой итерации цила отправляется сообщение 1 подписчику с обращением
 #к конкретному подписчику в письме
     for s in subscribers_list:
         #получаю имя подписчика
         sub_name = s.username
-        #получаю почту подписчика, она должна быть списком или словарем, что бы работало
-        sub_email = [s.email]
-        html_content = render_to_string(
-            'post_created_email.html',
-            {
-                'title': title,
-                'text': preview,
-                'link': f'{settings.SITE_URL}/posts/post/{pk}',
-                'sub_name': sub_name
+        if sub_name != post_author.username:
+            #получаю почту подписчика, она должна быть списком или словарем, что бы работало
+            sub_email = [s.email]
+            html_content = render_to_string(
+                'post_created_email.html',
+                {
+                    'title': title,
+                    'text': preview,
+                    'link': f'{settings.SITE_URL}/posts/post/{pk}',
+                    'sub_name': sub_name
 
-            }
-        )
+                }
+            )
 
-        msg = EmailMultiAlternatives(
-            subject='',
-            body='',
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            to=sub_email,
-        )
-        msg.attach_alternative(html_content, 'text/html')
-        msg.send()
+            msg = EmailMultiAlternatives(
+                subject='Новое объявление!',
+                body='',
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                to=sub_email,
+            )
+            msg.attach_alternative(html_content, 'text/html')
+            msg.send()
 
 
-@receiver(m2m_changed, sender=Post)
+@receiver(post_save, sender=Post)
 def notify_about_new_post(sender, instance, **kwargs):
-    if kwargs['action'] == 'post_add':
-        categories = instance.category.all()
-        #Список подписчиков его передать в функцию для рассылки
-        subscribers_list = []
+    category = instance.category
+    post_author = instance.post_author
+    #Список подписчиков его передать в функцию для рассылки
+    subscribers_list = []
 
-        for cat in categories:
-            subscribers = cat.subscribers.all()
-            subscribers_list += [s for s in subscribers]
+    subscribers = category.subscribers.all()
+    subscribers_list += [s for s in subscribers]
 
-        send_notifications(instance.preview, instance.pk, instance.title, subscribers_list)
+    send_notifications(instance.preview, instance.pk, instance.title, subscribers_list, post_author)
 
 
 def send_new_replay(replay_author, replay_text, replay_post):
