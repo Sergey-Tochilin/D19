@@ -21,11 +21,13 @@
     <hr>
     {% for post in posts %}
         <div style="border: 2px solid #ccc; border-radius: 10px; padding: 15px; margin-bottom: 20px; background-color: #f8f9fa;">
-            <p>Автор: {{ post.post_author }}</p>
+            <p>Автор: {{ post.post_author }}  {{ post.date|date:"d E Y, H:i" }}</p>
             <p>Категория: {{ post.category.name }} </p>
             <h4><a href="{% url 'post_detail' post.pk %}" style="text-decoration: none; color: black;">{{ post.title }}</a></h4>
             <span style="font-size: 22px;">{{ post.text|truncatechars:25|safe }}</span>
-            <p>{{ post.date|date:"d E Y, H:i" }}</p>
+
+
+
 
         </div>
     {% endfor %}

@@ -9,11 +9,10 @@
 {% block content %}
 
     <div style="border: 2px solid #ccc; border-radius: 10px; padding: 15px; margin-bottom: 20px; background-color: #f8f9fa;">
-        <p>Автор: {{ post.post_author }}</p>
-        <p>{{ post.date|date:"d E Y, H:i" }}</p>
+        <p>Автор: {{ post.post_author }}  {{ post.date|date:"d E Y, H:i" }}</p>
         <p>Категория: {{ post.category.name }}</p>
         <span style="font-size: 22px;">{{ post.text|safe }}</span>
-        <p></p>
+
 
     </div>
     <hr>
@@ -36,4 +35,10 @@
     <p>Авторизуйтесь, что бы оставить отклик:</p>
     <a class="btn btn-primary", href="{% url 'profile' %}">Войти</a>
 {% endif %}
- {% endblock content %}
+    {% if post.replay_set.all %}
+        <h4 style="margin-top: 20px">Все отклики:</h4>
+        {% for replay in post.replay_set.all %}
+            <p><u>Автор отклика:</u> {{ replay.replay_author }} <u>Текст отклика:</u> {{ replay.text }} </p>
+        {% endfor %}
+    {% endif %}
+{% endblock content %}

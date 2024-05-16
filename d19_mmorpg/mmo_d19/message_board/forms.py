@@ -1,3 +1,4 @@
+from django import forms
 from django.forms import ModelForm
 from ckeditor_uploader.widgets import CKEditorUploadingWidget
 
@@ -44,4 +45,7 @@ class ReplayForm(ModelForm):
         fields = [
             'text',
         ]
+        widgets = {
+            'text': forms.Textarea(attrs={'class': 'form-text', 'cols': 100, 'rows': 4})
+        }
 

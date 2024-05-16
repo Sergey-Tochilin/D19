@@ -21,10 +21,10 @@
 <br>
 
 {% if replays %}
-<h3>Отклики, ожидающие подтверждения:</h3>
+
 {% for replay in replays %}
     {% if not replay.status %}
-
+        <h3>Отклики, ожидающие подтверждения:</h3>
         <div style="border: 2px solid #ccc; border-radius: 10px; padding: 15px; margin-bottom: 20px; background-color: #f8f9fa;">
             <p>{{ replay.replay_author|safe }} {{ replay.date|date:"d E Y, H:i" }} </p>
             <hr>

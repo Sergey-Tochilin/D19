@@ -7,7 +7,7 @@
             <h1>Редактировать объявление:</h1>
             <h4>{{ post.title }}</h4>
             <hr>
-            {% if user.author == post_author %}
+            {% if user.username == post_author.username %}
             <form action="" method="post">
                 {% csrf_token %}
                 {{ form.as_p }}

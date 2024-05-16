@@ -107,7 +107,7 @@ def send_accept_replay(replay_author, replay_post):
 def about_notify_accept_replay(sender, instance, **kwargs):
     replay_author = instance.replay_author
     replay_post = instance.post #получаю поле внешний ключ на модель постов
-
-    send_accept_replay(replay_author, replay_post)
+    if instance.status:
+        send_accept_replay(replay_author, replay_post)
 
 

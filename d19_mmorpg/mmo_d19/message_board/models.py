@@ -42,8 +42,9 @@ class Post(models.Model):
     post_author = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
     text = RichTextUploadingField()
-    date = models.DateTimeField(auto_now_add=True)
+    date = models.DateTimeField(auto_now=True)#обновляет метку каждый раз при изменении (сохранении) строки в базе
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
+
 
     def preview(self):
         prew_text = self.text[0:124]
