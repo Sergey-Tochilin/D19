@@ -129,12 +129,23 @@ class PostCreate(LoginRequiredMixin, CreateView):
 
 
 class PostUpdate(UpdateView):
+    model = Post
     form_class = PostForm
-    template_name = 'post_create.html'
+    template_name = 'post_update.html'
 
     def get_object(self, **kwargs):
         id = self.kwargs.get('pk')
         return Post.objects.get(pk=id)
+
+    def get_context_data(self, **kwargs):
+        #Переопределяю контекстный словать
+        context = super().get_context_data(**kwargs)
+        #pk я получаю из ссылки <int:pk> он передается в kwargs
+        #это пост, который будет редактироваться и в нем я получаю автора поста
+        context['post_author'] = Post.objects.get(pk=self.kwargs.get('pk')).post_author
+        return context
+
+
 
 class PostSearch(ListView):
     model = Post

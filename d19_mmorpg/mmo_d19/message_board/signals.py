@@ -13,6 +13,7 @@ def send_notifications(preview, pk, title, subscribers_list, post_author):
     for s in subscribers_list:
         #получаю имя подписчика
         sub_name = s.username
+        #Отправляю всем подписчикам, кроме автора объявления
         if sub_name != post_author.username:
             #получаю почту подписчика, она должна быть списком или словарем, что бы работало
             sub_email = [s.email]

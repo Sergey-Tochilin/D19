@@ -1,0 +1,25 @@
+{% extends 'flatpages/default.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6 text-center">
+            <h1>Редактировать объявление:</h1>
+            <h4>{{ post.title }}</h4>
+            <hr>
+            {% if user.author == post_author %}
+            <form action="" method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                {{ form.media }}
+                <input type="submit" class="btn btn-primary" value="Добавить объявление" />
+            </form>
+            {% else %}
+                <h3>Вы не можете редактировать чужие объявления</h3>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+
+ {% endblock content %}

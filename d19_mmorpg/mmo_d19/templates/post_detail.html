@@ -17,9 +17,9 @@
 
     </div>
     <hr>
-{% if user.is_authenticated and user == post.post_author %}
+
      <a class="btn btn-primary", href="{% url 'post_update' post.id %}">Изменить</a>
-{% endif %}
+
 <!-- 'replay_create' post.id для того, что бы передать айди поста для создания отклика -->
  <!--<a class="btn btn-primary", href="">Добавить отклик</a>-->
 {% if user.is_authenticated %}
