@@ -1,5 +1,5 @@
 {% extends 'flatpages/default.html' %}
-
+{% load custom_tags %}
 
 {% block title %}
 <hr>
@@ -33,7 +33,7 @@
 {% if is_paginated %}
     <!-- Если доступна предыдущая страница, то даём ссылку на неё и самую первую страницу -->
     {% if page_obj.has_previous %}
-        <a href="?{% url_replace page=1 %}">1</a>
+        <a href="?{% url_replace page=1 %}">Первая страница</a>
         <a href="?{% url_replace page=page_obj.previous_page_number %}">Назад</a>
     {% endif %}
 
